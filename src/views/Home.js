@@ -5,50 +5,48 @@ import { Container, Header, Button, Text } from 'native-base';
 
 import { isConnected } from '../actions';
 import HeaderRouter from '../components/HeaderRouter';
+import quickMessage from '../helpers/quickMessage';
 import BillsList from '../components/BillsList';
 
 class Home extends Component {
   
   componentDidMount() {
-    NetInfo.addEventListener('connectionChange', this.onConnectivityChange);
+    NetInfo.addEventListener('connectionChange', this._onConnectivityChange);
     NetInfo.getConnectionInfo().then(connectionInfo => {
       this.props.isConnected(connectionInfo);
     });
   }
   
   componentWillUnmount() {
-    NetInfo.removeEventListener('connectionChange', this.onConnectivityChange);
+    NetInfo.removeEventListener('connectionChange', this._onConnectivityChange);
   }
   
-  onConnectivityChange = connectionInfo => {
+  _onConnectivityChange = connectionInfo => {
     this.props.isConnected(connectionInfo);
+    this._renderNoConnection();
   }
 
-  toCreateBill = () => {
+  _toCreateBill = () => {
     const { navigation } = this.props;
     navigation.navigate('CreateBill');
   }
 
-  notNetwork = () => {
-    const { online } = this.props;
-    if (online === false) {
-      return (
-        <Text>No internet!</Text>
-      );
-    } else {
-      null;
-    }
+  _renderNoConnection = () => {
+    const { connection } = this.props;
+    if (connection.online === false) {
+      return <Text style={{ textAlign: 'center', padding: 10, backgroundColor: '#ffffff' }}>{connection.message}</Text>;
+    };
+    return null;
   }
 
   render() {
-    const { online } = this.props;
     return (
       <Container>
         <HeaderRouter
           title="ContasPorMês"
-          rightButton={{icon:'add', onPress: this.toCreateBill }}
+          rightButton={{icon:'add', onPress: this._toCreateBill }}
         />
-        {this.notNetwork()}
+        {this._renderNoConnection()}
         <BillsList />
       </Container>
     );
@@ -56,8 +54,8 @@ class Home extends Component {
 }
 
 const mapStateToProps = state => {
-  const { online } = state.connectionReducer;
-  return { online };
+  const { connection } = state.connectionReducer;
+  return { connection };
 };
 
 export default connect(mapStateToProps, { isConnected })(Home);

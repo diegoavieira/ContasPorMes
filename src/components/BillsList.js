@@ -1,47 +1,68 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Container, List, ListItem , Body, Text, Button } from 'native-base';
+import { Container, List } from 'native-base';
+import { RefreshControl } from 'react-native';
 
-import { fetchBills } from '../actions';
-import Loading from './Loading';
+import { fetchBills, clearFetchBills } from '../actions';
+import quickMessage from '../helpers/quickMessage';
+import BillsListItem from './BillsListItem';
 
 class BillsList extends Component {
-
+  
   componentDidMount() {
     this.props.fetchBills();
   }
   
-  renderBillsRow = bill => {
-    return (
-      <ListItem>
-        <Body>
-          <Text>{bill.title}</Text>
-          <Text note>Teste teste teste</Text>
-        </Body>
-      </ListItem>
-    );
+  componentDidUpdate() {
+    const { bills, connection } = this.props;
+    if (bills.success  && connection.online) {
+      quickMessage({ text: bills.message, type: 'success' });
+    };
+    if (bills.success === false && connection.online) {
+      quickMessage({ text: bills.message, type: 'danger' });
+    };
+    if (bills.success === false && connection.online === false) {
+      quickMessage({ text: connection.message });
+    };
   }
 
-  renderBillsList = () => {
-    const { bills } = this.props;
-    if (bills.success === false) {
-      return <Text>{bills.message}</Text>
-    };
-    return (
-      <List dataArray={bills.data} renderRow={this.renderBillsRow} ></List>
-    );
+  componentWillUnmount() {
+    console.log('willUnmount')
+    this.props.clearFetchBills();
   }
-  
-  render() {
+
+  _refreshBillsList = () => {
+    this.props.clearFetchBills();
+    this.props.fetchBills();
+  }
+
+  _renderBillsList = () => {
     const { bills } = this.props;
-    const loading = bills.loading ? <Loading /> : null;
+    if (bills.data) {
+      return (
+        <List
+          dataArray={bills.data}
+          renderRow={bill =>
+            <BillsListItem bill={bill} />
+          }
+          refreshControl={
+            <RefreshControl
+              refreshing={bills.loading}
+              onRefresh={this._refreshBillsList}
+            />
+          }
+        >
+        </List>
+      );
+    } else {
+      return null;
+    };
+  }
+
+  render() {
     return (
       <Container>
-        <Button warning onPress={this.props.fetchBills}>
-          <Text>Reload!</Text>
-        </Button>
-        {loading}
-        {this.renderBillsList()}
+        {this._renderBillsList()}
       </Container>
     );
   }
@@ -49,8 +70,8 @@ class BillsList extends Component {
 
 const mapStateToProps = state => {
   const { bills } = state.billsReducer;
-  const { online } = state.connectionReducer;
-  return { bills, online };
+  const { connection } = state.connectionReducer;
+  return { bills, connection };
 };
 
-export default connect(mapStateToProps, { fetchBills })(BillsList);
+export default connect(mapStateToProps, { fetchBills, clearFetchBills })(BillsList);

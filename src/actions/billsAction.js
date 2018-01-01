@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-// const REQUEST_DATA = 'http://192.168.43.154:3000';
-// const REQUEST_DATA = 'https://rest-api-posts.herokuapp.com';  
-const REQUEST_DATA = 'https://jsonplaceholder.typicode.com';
+// const REQUEST_DATA = 'http://10.0.0.8:3000';
+const REQUEST_DATA = 'https://rest-api-posts.herokuapp.com';  
+// const REQUEST_DATA = 'https://jsonplaceholder.typicode.com';
 
 export const fetchBills = () => {
   const fetchBillsUrl = `${REQUEST_DATA}/posts`; 
@@ -11,14 +11,18 @@ export const fetchBills = () => {
       if (result.status === 200) {
         dispatch({
           type: 'FETCH_BILLS',
-          payload: { success: true, data: result.data }
+          payload: { success: true, data: result.data, message: 'Bills list updated.' }
         });
       };
     }).catch(error => {
       dispatch({
         type: 'FETCH_BILLS',
-        payload: { success: false, message: error.message }
+        payload: { success: false, message: 'Offline server. Try again.' }
       });
     });
   };
+};
+
+export const clearFetchBills = () => {
+  return { type: 'CLEAR_FETCH_BILLS' };
 };

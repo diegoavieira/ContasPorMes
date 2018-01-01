@@ -1,11 +1,14 @@
 const INITIAL_STATE = {
-  online: false
+  connection: {
+    online: null,
+    message: null
+  }
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'IS_CONNECTED':
-      return { ...state, online: action.payload };
+      return { ...state, connection: { ...action.payload } };
     default:
       return state;
   };

@@ -3,9 +3,11 @@ import { connect } from 'react-redux';
 import { StyleSheet } from 'react-native';
 import { Header, Body, Icon, Left, Right, Button, Title, Subtitle } from 'native-base';
 
+import { clearFetchBills, fetchBills } from '../actions';
+
 class HeaderRouter extends Component {
   
-  renderLeftButton = () => {
+  _renderLeftButton = () => {
     const { leftButton } = this.props;
     if (leftButton) {
       return (
@@ -20,7 +22,7 @@ class HeaderRouter extends Component {
     };
   }
 
-  renderRightButton = () => {
+  _renderRightButton = () => {
     const { rightButton } = this.props;
     if (rightButton) {
       return (
@@ -39,11 +41,11 @@ class HeaderRouter extends Component {
     const { title, rightButton } = this.props;
     return (
       <Header>
-        {this.renderLeftButton()}
+        {this._renderLeftButton()}
         <Body>
           <Title>{title}</Title>
         </Body>
-        {this.renderRightButton()}
+        {this._renderRightButton()}
       </Header>
     );
   }
@@ -54,8 +56,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  const { online } = state.connectionReducer;
-  return { online };
+  const { connection } = state.connectionReducer;
+  return { connection };
 }
 
-export default connect(mapStateToProps, {})(HeaderRouter);
+export default connect(mapStateToProps, { clearFetchBills, fetchBills })(HeaderRouter);
