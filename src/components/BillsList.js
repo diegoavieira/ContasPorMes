@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Container, List } from 'native-base';
 import { RefreshControl } from 'react-native';
+import { Container, List } from 'native-base';
 
 import { fetchBills, clearFetchBills } from '../actions';
-import quickMessage from '../helpers/quickMessage';
 import BillsListItem from './BillsListItem';
+import QuickNotification from './QuickNotification';
 
 class BillsList extends Component {
   
@@ -14,21 +14,18 @@ class BillsList extends Component {
   }
   
   componentDidUpdate() {
-    const { bills, connection } = this.props;
-    if (bills.success  && connection.online) {
-      quickMessage({ text: bills.message, type: 'success' });
-    };
-    if (bills.success === false && connection.online) {
-      quickMessage({ text: bills.message, type: 'danger' });
-    };
-    if (bills.success === false && connection.online === false) {
-      quickMessage({ text: connection.message });
-    };
+    this._renderQuickNotification();
   }
 
-  componentWillUnmount() {
-    console.log('willUnmount')
-    this.props.clearFetchBills();
+  _renderQuickNotification = () => {
+    const { bills, connection } = this.props;
+    if (bills.success === false && connection.online) {
+      return <QuickNotification message={bills.message} />
+    };
+    if (bills.success === false && connection.online === false) {
+      return <QuickNotification message={connection.message} onCloseButton />
+    };
+    return null;
   }
 
   _refreshBillsList = () => {
@@ -63,6 +60,7 @@ class BillsList extends Component {
     return (
       <Container>
         {this._renderBillsList()}
+        {this._renderQuickNotification()}
       </Container>
     );
   }

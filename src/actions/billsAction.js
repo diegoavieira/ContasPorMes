@@ -1,8 +1,6 @@
 import axios from 'axios';
 
-// const REQUEST_DATA = 'http://10.0.0.8:3000';
 const REQUEST_DATA = 'https://rest-api-posts.herokuapp.com';  
-// const REQUEST_DATA = 'https://jsonplaceholder.typicode.com';
 
 export const fetchBills = () => {
   const fetchBillsUrl = `${REQUEST_DATA}/posts`; 

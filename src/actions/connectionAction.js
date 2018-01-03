@@ -5,3 +5,7 @@ export const isConnected = connectionInfo => {
     payload: { online: status !== 'NONE', message: 'No conection with network.' }
   };
 };
+
+export const clearIsConnected = () => {
+  return { type: 'CLEAR_IS_CONNECTED' };
+}
