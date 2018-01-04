@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { NetInfo } from 'react-native';
-import { Container, Header, Button, Text } from 'native-base';
+import { NetInfo, View, Text } from 'react-native';
 
 import { isConnected } from '../actions';
-import HeaderRouter from '../components/HeaderRouter';
 import BillsList from '../components/BillsList';
 
 class Home extends Component {
-  
+  static navigationOptions = ({ navigation, screenProps }) => ({
+    title: 'Month\'s Bills'
+  });
+
   componentDidMount() {
     NetInfo.addEventListener('connectionChange', this._onConnectivityChange);
     NetInfo.getConnectionInfo().then(connectionInfo => {
@@ -31,13 +32,7 @@ class Home extends Component {
 
   render() {
     return (
-      <Container>
-        <HeaderRouter
-          title="ContasPorMês"
-          rightButton={{icon:'add', onPress: this._toCreateBill }}
-        />
-        <BillsList />
-      </Container>
+      <BillsList />
     );
   }
 }

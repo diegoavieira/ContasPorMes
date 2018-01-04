@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { RefreshControl } from 'react-native';
-import { Container, List } from 'native-base';
+import { RefreshControl, FlatList, View } from 'react-native';
 
 import { fetchBills, clearFetchBills } from '../actions';
 import BillsListItem from './BillsListItem';
@@ -11,9 +10,6 @@ class BillsList extends Component {
   
   componentDidMount() {
     this.props.fetchBills();
-  }
-  
-  componentDidUpdate() {
     this._renderQuickNotification();
   }
 
@@ -31,25 +27,28 @@ class BillsList extends Component {
   _refreshBillsList = () => {
     this.props.clearFetchBills();
     this.props.fetchBills();
+    this._renderQuickNotification();
   }
 
   _renderBillsList = () => {
     const { bills } = this.props;
     if (bills.data) {
       return (
-        <List
-          dataArray={bills.data}
-          renderRow={bill =>
-            <BillsListItem bill={bill} />
+        <FlatList
+          data={bills.data}
+          keyExtractor={(item, index) => item.id}
+          renderItem={
+            ({ item }) => <BillsListItem bill={item} />
           }
           refreshControl={
             <RefreshControl
               refreshing={bills.loading}
               onRefresh={this._refreshBillsList}
+              progressBackgroundColor='snow'
+              colors={['slategray']}
             />
           }
-        >
-        </List>
+        />
       );
     } else {
       return null;
@@ -57,11 +56,12 @@ class BillsList extends Component {
   }
 
   render() {
+    const { bills } = this.props;
     return (
-      <Container>
+      <View style={{ backgroundColor: 'snow', flex: 1, justifyContent: 'space-between' }}>
         {this._renderBillsList()}
         {this._renderQuickNotification()}
-      </Container>
+      </View>
     );
   }
 }

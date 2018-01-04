@@ -3,7 +3,6 @@ import { createStore, applyMiddleware } from 'redux';
 import ReduxThunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { AsyncStorage } from 'react-native';
-import { Root } from 'native-base';
 import { persistStore, autoRehydrate } from 'redux-persist';
 
 import Routers from './routers';
@@ -19,9 +18,7 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <Root>
-          <Routers />
-        </Root>
+        <Routers />
       </Provider>
     );
   }

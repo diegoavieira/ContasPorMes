@@ -12,7 +12,13 @@ const RouterNav = StackNavigator({
     screen: CreateBill
   }
 }, {
-  headerMode: 'none'
+  navigationOptions: {
+    headerStyle: {
+      backgroundColor: 'slategray',
+    },
+    headerTintColor: 'snow'
+  },
+  
 });
 
 export default RouterNav;

@@ -1,24 +1,13 @@
 import React, { Component } from 'react';
-import { Container, Text } from 'native-base';
-
-import HeaderRouter from '../components/HeaderRouter';
+import { View, Text } from 'react-native';
 
 class CreateBill extends Component {
   
-  toBackScreen = () => {
-    const { navigation } = this.props;
-    navigation.goBack();
-  }
-
   render() {
     return (
-      <Container>
-        <HeaderRouter
-          title="Nova Conta"
-          leftButton={{ icon:'arrow-back', onPress: this.toBackScreen }}
-        />
+      <View>
         <Text>Nova Conta</Text>
-      </Container>
+      </View>
     );
   }
 }
