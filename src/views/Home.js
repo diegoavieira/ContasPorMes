@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { NetInfo, View, Text } from 'react-native';
+import { NetInfo, Text, TouchableOpacity } from 'react-native';
 
 import { isConnected } from '../actions';
 import BillsList from '../components/BillsList';
+import Screen from '../components/Screen';
 
 class Home extends Component {
-  static navigationOptions = ({ navigation, screenProps }) => ({
+  static navigationOptions = ({ navigation }) => ({
     title: 'Month\'s Bills'
   });
 
@@ -32,7 +33,12 @@ class Home extends Component {
 
   render() {
     return (
-      <BillsList />
+      <Screen>
+        <BillsList />
+        <TouchableOpacity onPress={this._toCreateBill} style={{ padding: 15, backgroundColor: '#63707c'}}>
+          <Text style={{ color: 'snow', textAlign: 'center', fontSize: 16 }}>Create Bill</Text>
+        </TouchableOpacity>
+      </Screen>
     );
   }
 }

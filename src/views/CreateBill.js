@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { Text } from 'react-native';
+
+import Screen from '../components/Screen';
 
 class CreateBill extends Component {
-  
+  static navigationOptions = ({ navigation }) => ({
+    title: 'Create Bill'
+  });
+
   render() {
     return (
-      <View>
-        <Text>Nova Conta</Text>
-      </View>
+      <Screen>
+        <Text>CreateBill</Text>
+      </Screen>
     );
   }
 }
